@@ -40,7 +40,7 @@ public class SparkKMeans {
         JavaRDD<String> lines = context.textFile(inputFile);
         JavaRDD<Vector> points = lines.map(new ParsePoint());
 
-        KMeansModel model = KMeans.train(points.rdd(), k, iterations, runs, KMeans.K_MEANS_PARALLEL());
+        KMeansModel model = KMeans.train(points.rdd(), k, iterations, runs, KMeans.RANDOM());
 
         System.out.println("Cluster Centers");
         for(Vector center : model.clusterCenters()){
