@@ -17,7 +17,7 @@ public class SparkKMeans {
 
         @Override
         public Vector call(String v1) throws Exception {
-            String[] tokens = StringUtils.split(v1, " ");
+            String[] tokens = StringUtils.split(v1, ",");
             double[] point = new double[tokens.length];
             for(int i = 0; i < tokens.length; i++){
                 point[i] = Double.parseDouble(tokens[i]);
@@ -34,9 +34,9 @@ public class SparkKMeans {
         int k = Integer.parseInt(args[1]);
         int iterations = Integer.parseInt(args[2]);
         int runs = args.length >= 4? Integer.parseInt(args[3]) : 1;
-
         SparkConf conf = new SparkConf().setAppName("KMeans");
         JavaSparkContext context = new JavaSparkContext(conf);
+        long startTime = System.currentTimeMillis();
         JavaRDD<String> lines = context.textFile(inputFile);
         JavaRDD<Vector> points = lines.map(new ParsePoint());
 
@@ -49,6 +49,8 @@ public class SparkKMeans {
 
         double cost = model.computeCost(points.rdd());
         System.out.println("Cost: " + cost);
+        long endTime = System.currentTimeMillis();
         context.close();
+        System.out.println("Elapsed Time: " + (endTime - startTime));
     }
 }
